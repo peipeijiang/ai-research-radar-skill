@@ -16,22 +16,24 @@ credentials in GitHub or Worker secrets; never write them into tracked files.
    components, changing sources, or tailoring the research flow.
 3. Read [references/configuration.md](references/configuration.md) before
    collecting keys or configuring GitHub Actions.
-4. Create an independent deployment repository:
+4. Read [references/fulltext-resolution.md](references/fulltext-resolution.md)
+   whenever PDF recovery, evidence quality, or abstract fallback matters.
+5. Create an independent deployment repository:
 
    ```bash
    bash scripts/bootstrap_repository.sh --target OWNER/REPO --visibility private
    ```
 
-5. Edit `configs/config.json` in the deployed repository to reflect the user's
+6. Edit `configs/config.json` in the deployed repository to reflect the user's
    research topics and scoring weights. Preserve its existing schema.
-6. Configure GitHub Actions secrets interactively:
+7. Configure GitHub Actions secrets interactively:
 
    ```bash
    python scripts/configure_repo.py --repo OWNER/REPO
    ```
 
    For automation, export the same secret names and add `--non-interactive`.
-7. Optionally deploy one-click feedback after the user provides a fine-grained
+8. Optionally deploy one-click feedback after the user provides a fine-grained
    GitHub token limited to the deployment repository with Issues read/write:
 
    ```bash
@@ -39,15 +41,15 @@ credentials in GitHub or Worker secrets; never write them into tracked files.
      --repo OWNER/REPO --checkout /path/to/deployed/repo
    ```
 
-8. Trigger `daily-run.yml` with `gh workflow run`, watch it to completion, and
+9. Trigger `daily-run.yml` with `gh workflow run`, watch it to completion, and
    inspect both the WeCom messages and committed `knowledge/` pages.
-9. Run the deterministic audit:
+10. Run the deterministic audit:
 
    ```bash
    python scripts/verify_deployment.py --repo OWNER/REPO
    ```
 
-10. Read [references/verification.md](references/verification.md) when a run
+11. Read [references/verification.md](references/verification.md) when a run
     fails, content is shallow, PDF access is missing, or feedback is not saved.
 
 ## Deployment Decisions
@@ -73,6 +75,8 @@ Do not declare success until all requested items pass:
 
 - GitHub Actions workflow succeeds.
 - At least one paper reaches `knowledge/papers/` with native Markdown analysis.
+- Missing-PDF resolution includes ArXiv title/DOI lookup and the lawful
+  OpenAlex/Unpaywall/CORE repository chain before abstract fallback.
 - WeCom receives an overview and individual paper cards.
 - Deep-report and original-paper links open correctly.
 - Feedback either records in one click or opens the safe Issue fallback.

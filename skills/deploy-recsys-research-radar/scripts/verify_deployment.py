@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import base64
 import json
 import shutil
 import subprocess
@@ -18,6 +19,23 @@ REQUIRED_SECRETS = {
     "SMART_LLM_BASE_URL",
     "SMART_LLM_MODEL_NAME",
     "WECHAT_WEBHOOK_URL",
+}
+
+FEATURE_MARKERS = {
+    "src/sources/search_agent.py": (
+        "_resolve_missing_arxiv_versions",
+        "_resolve_missing_open_access",
+    ),
+    "src/sources/arxiv_source.py": ("find_by_title",),
+    "src/enrichers/open_access.py": (
+        "from_openalex_locations",
+        "from_unpaywall",
+        "from_core",
+    ),
+    "src/agents/analysis_agent.py": (
+        'analysis_basis = "full_text" if pdf_text else "abstract"',
+        "PyMuPDF",
+    ),
 }
 
 
@@ -45,6 +63,20 @@ def main() -> int:
     print(f"[{'OK' if not missing else 'FAIL'}] required secret names")
     if missing:
         failures.append("missing secrets: " + ", ".join(missing))
+
+    missing_features = []
+    for path, markers in FEATURE_MARKERS.items():
+        try:
+            payload = json.loads(output("gh", "api", f"repos/{args.repo}/contents/{path}"))
+            source = base64.b64decode(payload["content"]).decode("utf-8")
+            missing_features.extend(
+                f"{path}:{marker}" for marker in markers if marker not in source
+            )
+        except (subprocess.CalledProcessError, KeyError, ValueError, UnicodeDecodeError, json.JSONDecodeError):
+            missing_features.append(path)
+    print(f"[{'OK' if not missing_features else 'FAIL'}] missing-PDF resolution chain")
+    if missing_features:
+        failures.append("missing full-text features: " + ", ".join(missing_features))
 
     try:
         content = output("gh", "api", f"repos/{args.repo}/contents/knowledge/index.jsonl")

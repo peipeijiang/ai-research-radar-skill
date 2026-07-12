@@ -62,6 +62,10 @@ flowchart LR
 | Memory | Deduplicated Git knowledge and optional MiniMax-backed GBrain search |
 | Feedback | Signed one-click Like/Ignore links with GitHub Issue audit trail |
 
+For papers without a PDF, the deployed pipeline tries an ArXiv DOI/title match,
+OpenAlex repository locations, Unpaywall, CORE, and public repository landing
+pages before falling back to explicitly labeled abstract-only analysis.
+
 ## Quick Start
 
 ### 1. Install the Skill
