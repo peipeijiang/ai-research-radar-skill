@@ -1,0 +1,4 @@
+interface:
+  display_name: "Deploy Recsys Research Radar"
+  short_description: "Deploy an automated AI paper research radar"
+  default_prompt: "Use $deploy-recsys-research-radar to deploy and verify my daily recommendation-systems research pipeline."
