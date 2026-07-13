@@ -35,6 +35,7 @@ FEATURE_MARKERS = {
     "src/enrichers/github_code.py": (
         "find_paper_pdf",
         "github_author_repository",
+        "can_supply_paper_pdf",
     ),
     "src/sources/institutional_rss_source.py": (
         "InstitutionalRssSource",

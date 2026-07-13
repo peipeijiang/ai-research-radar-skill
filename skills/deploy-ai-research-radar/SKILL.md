@@ -103,6 +103,9 @@ Each deployment keeps its own feedback events and semantic preference profile.
   institutional pages and official GitHub repositories.
 - Do not treat the presence of a publisher PDF URL as proof that it can be
   downloaded or parsed. Continue the open-access chain after access failure.
+- Never use a GitHub PDF as paper evidence when the repository is classified
+  `possible` from title overlap alone. Require DOI, ArXiv ID, author ownership,
+  a paper-declared URL, or an equivalent `likely`/`official` identity signal.
 - Use MinerU when configured and PyMuPDF as the local fallback.
 - Keep one paper per WeCom message. Split oversized sections without ellipses or
   data loss.

@@ -23,6 +23,8 @@ proof of full-text access.
 8. Inspect a title-matched implementation repository README for an explicitly
    linked paper PDF. Accept only a GitHub-hosted file from that repository and
    record `github_author_repository` provenance; reject paper collections.
+   Title overlap alone is insufficient: also require DOI, ArXiv ID, author
+   ownership, a paper-declared repository, or `likely`/`official` verification.
 9. Record the provider, license/version when available, and URL in
    `fulltext_provenance`.
 10. Download and parse with MinerU when configured; automatically fall back to
@@ -68,6 +70,7 @@ The deployed template must retain:
 - `OpenAccessResolver.from_openreview`
 - `OpenAccessResolver.from_core`
 - `GitHubCodeEnricher.find_paper_pdf`
+- `GitHubCodeEnricher.can_supply_paper_pdf`
 - `AnalysisAgent.deep_analyze` with explicit full-text/abstract basis
 - MinerU-to-PyMuPDF fallback
 - `reanalyze-paper.yml` and `scripts/reanalyze_paper.py`
