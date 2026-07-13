@@ -24,12 +24,19 @@ credentials in GitHub or Worker secrets; never write them into tracked files.
    bash scripts/bootstrap_repository.sh --target OWNER/REPO --visibility private
    ```
 
+   Start with an empty knowledge index by default. Use `--keep-knowledge` only
+   when intentionally cloning an existing research library.
+
 6. Configure the user's research field before any run. Do not silently retain
    the template's recommendation-systems defaults:
 
    ```bash
    python scripts/configure_topics.py --checkout /path/to/deployed/repo
    ```
+
+   Provide an ASCII `--field-slug` when the display name is non-Latin. The
+   configured field name must appear in daily and weekly titles; the slug is
+   stored in knowledge tags.
 7. Configure GitHub Actions secrets interactively:
 
    ```bash
@@ -102,6 +109,8 @@ Do not declare success until all requested items pass:
 - At least one paper reaches `knowledge/papers/` with native Markdown analysis.
 - The research context, keywords, OpenAlex terms, and ArXiv categories match
   the user's stated field rather than the template defaults.
+- The deployment begins with no template papers, and daily/weekly titles use
+  the configured research field name.
 - Missing-PDF resolution includes ArXiv title/DOI lookup and the lawful
   OpenAlex/Unpaywall/OpenReview/CORE/author-GitHub chain before abstract fallback.
 - WeCom receives an overview and individual paper cards.

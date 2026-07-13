@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -17,6 +18,10 @@ except ImportError as exc:
 
 def split_values(value: str) -> list[str]:
     return [item.strip() for item in value.replace("，", ",").split(",") if item.strip()]
+
+
+def slugify(value: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
 
 
 def ask(current: str, prompt: str, required: bool = True) -> str:
@@ -32,6 +37,7 @@ def main() -> int:
     )
     parser.add_argument("--checkout", type=Path, required=True)
     parser.add_argument("--field-name", default="")
+    parser.add_argument("--field-slug", default="", help="ASCII knowledge tag")
     parser.add_argument("--keywords", default="", help="Comma-separated relevance keywords")
     parser.add_argument("--arxiv-categories", default="", help="Comma-separated ArXiv categories")
     parser.add_argument("--openalex-terms", default="", help="Defaults to keywords")
@@ -53,6 +59,10 @@ def main() -> int:
         raise SystemExit("At least one keyword and one ArXiv category are required")
 
     openalex_terms = split_values(args.openalex_terms) or keywords
+    field_slug = slugify(args.field_slug) or slugify(field_name)
+    if not field_slug:
+        field_slug = slugify(openalex_terms[0] if openalex_terms else keywords[0])
+    field_slug = field_slug or "academic-research"
     dblp_venues = split_values(args.dblp_venues)
     dblp_terms = split_values(args.dblp_title_terms) or keywords
     context = args.research_context.strip() or (
@@ -77,12 +87,14 @@ def main() -> int:
     keyword_config["research_context"] = context
     data["research_profile"] = {
         "field_name": field_name,
+        "field_slug": field_slug,
         "configured_at": datetime.now(timezone.utc).isoformat(),
         "configured_by": "deploy-ai-research-radar",
     }
 
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"Configured research field: {field_name}")
+    print(f"Knowledge field tag: {field_slug}")
     print(f"Keywords: {len(keywords)} | ArXiv categories: {len(categories)}")
     print(f"OpenAlex terms: {len(openalex_terms)} | DBLP venues: {len(dblp_venues)}")
     return 0

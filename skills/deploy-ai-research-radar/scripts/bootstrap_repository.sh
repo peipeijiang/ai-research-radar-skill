@@ -5,6 +5,7 @@ SOURCE="peipeijiang/arxiv-daily-researcher"
 TARGET=""
 VISIBILITY="private"
 DESTINATION=""
+KEEP_KNOWLEDGE=false
 
 usage() {
   cat <<'EOF'
@@ -14,6 +15,7 @@ Options:
   --source OWNER/REPO       Template repository
   --visibility private|public
   --destination PATH        Local checkout path (default: ./REPO)
+  --keep-knowledge          Preserve template knowledge instead of starting empty
 EOF
 }
 
@@ -23,6 +25,7 @@ while [[ $# -gt 0 ]]; do
     --target) TARGET="$2"; shift 2 ;;
     --visibility) VISIBILITY="$2"; shift 2 ;;
     --destination) DESTINATION="$2"; shift 2 ;;
+    --keep-knowledge) KEEP_KNOWLEDGE=true; shift ;;
     -h|--help) usage; exit 0 ;;
     *) echo "Unknown argument: $1" >&2; usage >&2; exit 2 ;;
   esac
@@ -60,6 +63,13 @@ fi
 
 git clone --depth 1 "https://github.com/$SOURCE.git" "$DESTINATION"
 rm -rf "$DESTINATION/.git"
+if [[ "$KEEP_KNOWLEDGE" != true ]]; then
+  rm -rf "$DESTINATION/knowledge/papers" "$DESTINATION/knowledge/reports"
+  mkdir -p "$DESTINATION/knowledge/papers"
+  : > "$DESTINATION/knowledge/index.jsonl"
+  printf '{\n  "nodes": {},\n  "edges": []\n}\n' > "$DESTINATION/knowledge/graph.json"
+  printf '{\n  "liked": [],\n  "ignored": []\n}\n' > "$DESTINATION/knowledge/feedback.json"
+fi
 git -C "$DESTINATION" init -b main
 git -C "$DESTINATION" add .
 git -C "$DESTINATION" -c user.name="Research Radar Bootstrap" \

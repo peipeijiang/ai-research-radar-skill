@@ -95,7 +95,8 @@ bash "$SKILL/scripts/bootstrap_repository.sh" \
   --visibility private
 
 python "$SKILL/scripts/configure_topics.py" \
-  --checkout /path/to/my-research-radar
+  --checkout /path/to/my-research-radar \
+  --field-slug my-research-field
 
 python "$SKILL/scripts/configure_repo.py" \
   --repo YOUR_GITHUB_NAME/my-research-radar
@@ -103,6 +104,9 @@ python "$SKILL/scripts/configure_repo.py" \
 
 The configuration script sends secrets through stdin to GitHub. It does not
 write keys to the repository or a local `.env` file.
+
+New deployments start with an empty knowledge library. Pass `--keep-knowledge`
+to the bootstrap script only when intentionally copying an existing library.
 
 ### 3. Trigger and Verify
 

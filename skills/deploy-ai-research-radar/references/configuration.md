@@ -40,6 +40,10 @@ Run the topic configurator before the first workflow:
 python scripts/configure_topics.py --checkout /path/to/deployed/repo
 ```
 
+For a non-Latin display name, pass an explicit tag, for example
+`--field-slug banking-fiscal-monetary-policy`. The display name controls daily
+and weekly titles; the slug controls durable knowledge metadata.
+
 It replaces the recommendation-system template defaults with the user's:
 
 - named academic field and research context;

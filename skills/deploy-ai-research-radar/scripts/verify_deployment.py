@@ -43,6 +43,7 @@ FEATURE_MARKERS = {
     ),
     "src/notifications/notifier.py": (
         "未获取论文正文",
+        "RESEARCH_FIELD_NAME",
         'response_data.get("errcode"',
         "return delivery_succeeded",
     ),
@@ -107,7 +108,11 @@ def main() -> int:
             )
             config_text = base64.b64decode(payload["content"]).decode("utf-8")
             profile = json.loads(config_text).get("research_profile") or {}
-            custom_topics = profile.get("configured_by") == "deploy-ai-research-radar"
+            custom_topics = (
+                profile.get("configured_by") == "deploy-ai-research-radar"
+                and bool(profile.get("field_name"))
+                and bool(profile.get("field_slug"))
+            )
         except (subprocess.CalledProcessError, KeyError, ValueError, UnicodeDecodeError, json.JSONDecodeError):
             custom_topics = False
         print(f"[{'OK' if custom_topics else 'FAIL'}] user-defined research profile")
