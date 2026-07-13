@@ -1,15 +1,15 @@
 <div align="center">
 
-# Recsys Research Radar Skill
+# AI Research Radar Skill
 
-**Deploy a daily AI research companion for recommendation-systems papers.**
+**Deploy a daily AI research companion for any academic field.**
 
 [**English**](#english) · [**中文**](#中文)
 
-[![Validate](https://img.shields.io/github/actions/workflow/status/peipeijiang/recsys-research-radar-skill/validate.yml?style=for-the-badge&label=Skill%20Validation)](https://github.com/peipeijiang/recsys-research-radar-skill/actions/workflows/validate.yml)
+[![Validate](https://img.shields.io/github/actions/workflow/status/peipeijiang/ai-research-radar-skill/validate.yml?style=for-the-badge&label=Skill%20Validation)](https://github.com/peipeijiang/ai-research-radar-skill/actions/workflows/validate.yml)
 [![Agent Skill](https://img.shields.io/badge/Agent%20Skill-Compatible-111111?style=for-the-badge)](https://agentskills.io/)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-[![License](https://img.shields.io/github/license/peipeijiang/recsys-research-radar-skill?style=for-the-badge)](LICENSE)
+[![License](https://img.shields.io/github/license/peipeijiang/ai-research-radar-skill?style=for-the-badge)](LICENSE)
 
 </div>
 
@@ -17,8 +17,8 @@
 
 ## What It Deploys
 
-`deploy-recsys-research-radar` is an Agent Skill for setting up a complete,
-GitHub-hosted paper research workflow. It turns a research topic into daily
+`deploy-ai-research-radar` is an Agent Skill for setting up a complete,
+GitHub-hosted paper research workflow. It turns any user-defined field into daily
 discovery, PDF-backed analysis, durable knowledge, weekly synthesis, WeCom
 delivery, and preference feedback.
 
@@ -55,7 +55,7 @@ flowchart LR
 
 | Area | Included |
 | --- | --- |
-| Discovery | ArXiv, OpenAlex, DBLP venue feeds, Semantic Scholar enrichment |
+| Discovery | User-defined topics across ArXiv, OpenAlex, optional DBLP venues |
 | Understanding | LLM scoring, Chinese summaries, MinerU/PyMuPDF full-text analysis |
 | Evidence | Open-access resolution, citation graph, official GitHub code verification |
 | Delivery | Daily overview, one complete WeCom card per paper, weekly synthesis |
@@ -71,26 +71,29 @@ pages before falling back to explicitly labeled abstract-only analysis.
 ### 1. Install the Skill
 
 ```bash
-git clone https://github.com/peipeijiang/recsys-research-radar-skill.git
+git clone https://github.com/peipeijiang/ai-research-radar-skill.git
 mkdir -p ~/.agents/skills
-cp -R recsys-research-radar-skill/skills/deploy-recsys-research-radar ~/.agents/skills/
+cp -R ai-research-radar-skill/skills/deploy-ai-research-radar ~/.agents/skills/
 ```
 
 Then ask your agent:
 
 ```text
-Use $deploy-recsys-research-radar to deploy a private daily research radar
-for LLM-based recommendation and generative retrieval, delivered to WeCom.
+Use $deploy-ai-research-radar to deploy a private daily research radar for my
+field, with my own keywords and ArXiv categories, delivered to WeCom.
 ```
 
 ### 2. Or Run the Deterministic Setup
 
 ```bash
-SKILL=skills/deploy-recsys-research-radar
+SKILL=skills/deploy-ai-research-radar
 
 bash "$SKILL/scripts/bootstrap_repository.sh" \
   --target YOUR_GITHUB_NAME/my-research-radar \
   --visibility private
+
+python "$SKILL/scripts/configure_topics.py" \
+  --checkout /path/to/my-research-radar
 
 python "$SKILL/scripts/configure_repo.py" \
   --repo YOUR_GITHUB_NAME/my-research-radar
@@ -107,7 +110,8 @@ gh workflow run daily-run.yml \
   -f search_days=7
 
 python "$SKILL/scripts/verify_deployment.py" \
-  --repo YOUR_GITHUB_NAME/my-research-radar
+  --repo YOUR_GITHUB_NAME/my-research-radar \
+  --require-custom-topics
 ```
 
 ## Configuration
@@ -160,30 +164,31 @@ agent tooling. The maintained reference repositories from
 
 ## 中文
 
-`deploy-recsys-research-radar` 是一个用于部署推荐系统论文研究雷达的
-Agent Skill。它把 ArXiv、OpenAlex、DBLP 的论文发现，LLM 评分、PDF 深读、
+`deploy-ai-research-radar` 是一个可按任意学术领域部署论文研究雷达的
+Agent Skill。它先询问用户自己的研究背景、关键词与 ArXiv 分类，再把
+ArXiv、OpenAlex、可选 DBLP 的论文发现，LLM 评分、PDF 深读、
 GitHub 知识库、企业微信日报、周报、GBrain 检索和一键反馈组合成一套可长期
 运行的 GitHub Actions 流程。
 
 ### 适合谁
 
-- 希望持续追踪推荐系统、生成式推荐、LLM4Rec 等方向的研究者
+- 希望持续追踪计算机、物理、生物医学或其他学术方向的研究者
 - 不想每天手动搜索、下载、阅读和整理论文的个人用户
 - 需要保留证据链、代码仓库、引用关系和偏好反馈的研究团队
 
 ### 最快安装
 
 ```bash
-git clone https://github.com/peipeijiang/recsys-research-radar-skill.git
+git clone https://github.com/peipeijiang/ai-research-radar-skill.git
 mkdir -p ~/.agents/skills
-cp -R recsys-research-radar-skill/skills/deploy-recsys-research-radar ~/.agents/skills/
+cp -R ai-research-radar-skill/skills/deploy-ai-research-radar ~/.agents/skills/
 ```
 
 随后对 Agent 说：
 
 ```text
-使用 $deploy-recsys-research-radar，帮我部署一套每天推送到企业微信的
-推荐系统论文研究雷达，主题是 LLM 推荐和生成式检索。
+使用 $deploy-ai-research-radar，先询问我的研究领域和关键词，再部署一套
+每天推送到企业微信的论文研究雷达。
 ```
 
 ### 部署结果

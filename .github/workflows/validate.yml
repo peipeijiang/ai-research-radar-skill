@@ -14,18 +14,19 @@ jobs:
           python-version: '3.12'
       - name: Validate scripts
         run: |
-          bash -n skills/deploy-recsys-research-radar/scripts/bootstrap_repository.sh
-          bash -n skills/deploy-recsys-research-radar/scripts/deploy_feedback_worker.sh
+          bash -n skills/deploy-ai-research-radar/scripts/bootstrap_repository.sh
+          bash -n skills/deploy-ai-research-radar/scripts/deploy_feedback_worker.sh
           python -m py_compile \
-            skills/deploy-recsys-research-radar/scripts/configure_repo.py \
-            skills/deploy-recsys-research-radar/scripts/verify_deployment.py
+            skills/deploy-ai-research-radar/scripts/configure_topics.py \
+            skills/deploy-ai-research-radar/scripts/configure_repo.py \
+            skills/deploy-ai-research-radar/scripts/verify_deployment.py
       - name: Validate Skill metadata
         run: |
           python - <<'PY'
           from pathlib import Path
-          path = Path('skills/deploy-recsys-research-radar/SKILL.md')
+          path = Path('skills/deploy-ai-research-radar/SKILL.md')
           text = path.read_text()
-          assert text.startswith('---\nname: deploy-recsys-research-radar\n')
+          assert text.startswith('---\nname: deploy-ai-research-radar\n')
           assert '\ndescription:' in text.split('---', 2)[1]
           assert 'TODO' not in text
           assert len(text.splitlines()) < 500

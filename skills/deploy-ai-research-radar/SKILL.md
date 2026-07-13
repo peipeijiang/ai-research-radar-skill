@@ -1,9 +1,9 @@
 ---
-name: deploy-recsys-research-radar
-description: Deploy, configure, verify, or repair a GitHub-hosted AI research radar for recommendation-systems papers. Use this skill whenever a user wants automated paper discovery, ArXiv/OpenAlex/DBLP ingestion, LLM scoring and PDF analysis, MinerU parsing, daily or weekly WeCom delivery, Git-backed knowledge, GBrain semantic search, GitHub code matching, citation expansion, or one-click paper feedback, even when they describe only part of that workflow.
+name: deploy-ai-research-radar
+description: Deploy, configure, verify, or repair a GitHub-hosted AI research radar for any academic field. Use this skill whenever a user wants automated paper discovery, custom research topics, ArXiv/OpenAlex/DBLP ingestion, LLM scoring and PDF analysis, MinerU parsing, daily or weekly WeCom delivery, Git-backed knowledge, GBrain semantic search, GitHub code matching, citation expansion, or one-click paper feedback, even when they describe only part of that workflow.
 ---
 
-# Deploy Recsys Research Radar
+# Deploy AI Research Radar
 
 Build from the maintained template at `peipeijiang/arxiv-daily-researcher`. Keep
 credentials in GitHub or Worker secrets; never write them into tracked files.
@@ -24,8 +24,12 @@ credentials in GitHub or Worker secrets; never write them into tracked files.
    bash scripts/bootstrap_repository.sh --target OWNER/REPO --visibility private
    ```
 
-6. Edit `configs/config.json` in the deployed repository to reflect the user's
-   research topics and scoring weights. Preserve its existing schema.
+6. Configure the user's research field before any run. Do not silently retain
+   the template's recommendation-systems defaults:
+
+   ```bash
+   python scripts/configure_topics.py --checkout /path/to/deployed/repo
+   ```
 7. Configure GitHub Actions secrets interactively:
 
    ```bash
@@ -46,7 +50,7 @@ credentials in GitHub or Worker secrets; never write them into tracked files.
 10. Run the deterministic audit:
 
    ```bash
-   python scripts/verify_deployment.py --repo OWNER/REPO
+   python scripts/verify_deployment.py --repo OWNER/REPO --require-custom-topics
    ```
 
 11. Read [references/verification.md](references/verification.md) when a run
@@ -75,6 +79,8 @@ Do not declare success until all requested items pass:
 
 - GitHub Actions workflow succeeds.
 - At least one paper reaches `knowledge/papers/` with native Markdown analysis.
+- The research context, keywords, OpenAlex terms, and ArXiv categories match
+  the user's stated field rather than the template defaults.
 - Missing-PDF resolution includes ArXiv title/DOI lookup and the lawful
   OpenAlex/Unpaywall/CORE repository chain before abstract fallback.
 - WeCom receives an overview and individual paper cards.

@@ -30,15 +30,23 @@ not required for a first run.
 
 ## Research topics
 
-Edit the deployed repository's `configs/config.json`. Preserve the schema and
-adjust:
+Run the topic configurator before the first workflow:
 
-- primary keywords and weights;
-- supporting and exclusion keywords;
-- score threshold;
-- lookback period and source limits;
-- target ArXiv categories and DBLP venues;
-- notification Top N.
+```bash
+python scripts/configure_topics.py --checkout /path/to/deployed/repo
+```
+
+It replaces the recommendation-system template defaults with the user's:
+
+- named academic field and research context;
+- primary relevance keywords;
+- OpenAlex search terms;
+- target ArXiv categories;
+- optional DBLP venues and title terms.
+
+When DBLP venues are empty, the configurator disables DBLP while retaining
+ArXiv and OpenAlex. It writes a `research_profile` marker so deployment
+verification can reject an unconfirmed template profile.
 
 Start narrow enough that a human can read the daily output. Expand after
 reviewing one week of false positives and missed papers.

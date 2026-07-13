@@ -3,7 +3,7 @@ set -euo pipefail
 
 REPO=""
 CHECKOUT=""
-WORKER_NAME="recsys-research-feedback"
+WORKER_NAME="ai-research-feedback"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in

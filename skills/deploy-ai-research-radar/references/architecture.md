@@ -26,7 +26,7 @@ flowchart LR
 | --- | --- |
 | ArXiv | Recent preprints, abstracts, canonical PDF access |
 | OpenAlex | Broad topic discovery, metadata, citations, related works, OA locations |
-| DBLP | Venue-focused discovery for RecSys, SIGIR, WSDM, KDD, WWW, and CIKM |
+| DBLP | Optional venue-focused discovery when the user's field has configured DBLP venues |
 | Semantic Scholar | Abstract/TLDR backfill and citation metadata |
 | GitHub matching | Verify official or author-linked implementation repositories |
 | MinerU | Structured cloud PDF extraction; optional |

@@ -47,6 +47,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--repo", required=True)
     parser.add_argument("--feedback-url", default="")
+    parser.add_argument("--require-custom-topics", action="store_true")
     args = parser.parse_args()
 
     failures = []
@@ -77,6 +78,20 @@ def main() -> int:
     print(f"[{'OK' if not missing_features else 'FAIL'}] missing-PDF resolution chain")
     if missing_features:
         failures.append("missing full-text features: " + ", ".join(missing_features))
+
+    if args.require_custom_topics:
+        try:
+            payload = json.loads(
+                output("gh", "api", f"repos/{args.repo}/contents/configs/config.json")
+            )
+            config_text = base64.b64decode(payload["content"]).decode("utf-8")
+            profile = json.loads(config_text).get("research_profile") or {}
+            custom_topics = profile.get("configured_by") == "deploy-ai-research-radar"
+        except (subprocess.CalledProcessError, KeyError, ValueError, UnicodeDecodeError, json.JSONDecodeError):
+            custom_topics = False
+        print(f"[{'OK' if custom_topics else 'FAIL'}] user-defined research profile")
+        if not custom_topics:
+            failures.append("research topics still use an unconfirmed template profile")
 
     try:
         content = output("gh", "api", f"repos/{args.repo}/contents/knowledge/index.jsonl")
