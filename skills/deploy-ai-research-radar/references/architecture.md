@@ -31,7 +31,9 @@ flowchart LR
 | OpenAlex | Broad topic discovery, metadata, citations, related works, OA locations |
 | DBLP | Optional venue-focused discovery when the user's field has configured DBLP venues |
 | ECB/BIS/Federal Reserve | Official central-bank working-paper RSS with first-party provenance |
+| Bank of Canada/EconStor | Official RSS discovery with repository landing pages for PDF recovery |
 | World Bank | Official Documents API restricted to Policy Research Working Papers |
+| RePEc free series | Current-year catalogs for IMF, BoE, OECD, ADB, IZA, CESifo, and regional Federal Reserve working papers; restricted records are rejected |
 | Semantic Scholar | Abstract/TLDR backfill and citation metadata |
 | GitHub matching | Verify official or author-linked implementation repositories |
 | OpenReview | Exact-title public submissions and lawful PDF recovery |

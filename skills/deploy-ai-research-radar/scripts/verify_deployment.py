@@ -45,6 +45,12 @@ FEATURE_MARKERS = {
         "WorldBankSource",
         "worldbank_documents_api",
     ),
+    "src/sources/repec_series_source.py": (
+        "class RepecSeriesSource",
+        "freedownload",
+        "current_year_links",
+        "repec_free_fulltext",
+    ),
     "src/agents/analysis_agent.py": (
         'analysis_basis = "full_text" if pdf_text else "abstract"',
         "PyMuPDF",

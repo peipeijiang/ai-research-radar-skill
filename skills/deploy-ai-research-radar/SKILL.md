@@ -88,8 +88,9 @@ credentials in GitHub or Worker secrets; never write them into tracked files.
 - Treat ArXiv, OpenAlex, and DBLP as discovery sources with different roles;
   deduplicate by normalized title before analysis.
 - Select field-native sources instead of enabling DBLP universally. For banking
-  and macro policy, prefer ECB, BIS, Federal Reserve, and World Bank official
-  feeds alongside ArXiv and OpenAlex.
+  and macro policy, prefer central-bank and multilateral-institution feeds,
+  EconStor, and configured RePEc free working-paper series alongside ArXiv and
+  OpenAlex.
 - Resolve full text through lawful open-access sources: ArXiv, OpenAlex
   repositories, Unpaywall, OpenReview, CORE, then title-matched author or
   institutional pages and official GitHub repositories.
