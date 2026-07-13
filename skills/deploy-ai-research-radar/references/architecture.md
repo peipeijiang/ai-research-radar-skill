@@ -30,6 +30,8 @@ flowchart LR
 | ArXiv | Recent preprints, abstracts, canonical PDF access |
 | OpenAlex | Broad topic discovery, metadata, citations, related works, OA locations |
 | DBLP | Optional venue-focused discovery when the user's field has configured DBLP venues |
+| ECB/BIS/Federal Reserve | Official central-bank working-paper RSS with first-party provenance |
+| World Bank | Official Documents API restricted to Policy Research Working Papers |
 | Semantic Scholar | Abstract/TLDR backfill and citation metadata |
 | GitHub matching | Verify official or author-linked implementation repositories |
 | OpenReview | Exact-title public submissions and lawful PDF recovery |

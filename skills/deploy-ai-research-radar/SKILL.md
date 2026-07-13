@@ -14,6 +14,8 @@ credentials in GitHub or Worker secrets; never write them into tracked files.
    topics, LLM provider, notification channel, and optional integrations.
 2. Read [references/architecture.md](references/architecture.md) when explaining
    components, changing sources, or tailoring the research flow.
+   Read [references/source-selection.md](references/source-selection.md) before
+   choosing discovery sources for a new academic field.
 3. Read [references/configuration.md](references/configuration.md) before
    collecting keys or configuring GitHub Actions.
 4. Read [references/fulltext-resolution.md](references/fulltext-resolution.md)
@@ -85,6 +87,9 @@ credentials in GitHub or Worker secrets; never write them into tracked files.
   is a practical default for scoring and synthesis.
 - Treat ArXiv, OpenAlex, and DBLP as discovery sources with different roles;
   deduplicate by normalized title before analysis.
+- Select field-native sources instead of enabling DBLP universally. For banking
+  and macro policy, prefer ECB, BIS, Federal Reserve, and World Bank official
+  feeds alongside ArXiv and OpenAlex.
 - Resolve full text through lawful open-access sources: ArXiv, OpenAlex
   repositories, Unpaywall, OpenReview, CORE, then title-matched author or
   institutional pages and official GitHub repositories.

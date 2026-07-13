@@ -55,7 +55,7 @@ flowchart LR
 
 | Area | Included |
 | --- | --- |
-| Discovery | User-defined topics across ArXiv, OpenAlex, optional DBLP venues |
+| Discovery | Field-native sources: ArXiv/OpenAlex/DBLP or official ECB/BIS/Fed/World Bank feeds |
 | Understanding | LLM scoring, Chinese summaries, MinerU/PyMuPDF full-text analysis |
 | Evidence | ArXiv/OpenAlex/Unpaywall/OpenReview/CORE/author-GitHub resolution, citation graph |
 | Delivery | Full-text/abstract counts, evidence warnings, one WeCom card per paper, weekly synthesis |
@@ -143,6 +143,7 @@ coverage:
 - **MinerU** for structured PDF extraction
 - **CORE** for repository full text
 - **Semantic Scholar** for metadata and citation enrichment
+- **Official policy sources** for ECB, BIS, Federal Reserve, and World Bank working papers
 - **Cloudflare Worker** for one-click feedback
 - **GBrain** for local hybrid and semantic search
 

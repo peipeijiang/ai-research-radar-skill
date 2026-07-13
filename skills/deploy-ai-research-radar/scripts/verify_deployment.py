@@ -37,6 +37,14 @@ FEATURE_MARKERS = {
         "find_paper_pdf",
         "github_author_repository",
     ),
+    "src/sources/institutional_rss_source.py": (
+        "InstitutionalRssSource",
+        "official_institution_rss",
+    ),
+    "src/sources/worldbank_source.py": (
+        "WorldBankSource",
+        "worldbank_documents_api",
+    ),
     "src/agents/analysis_agent.py": (
         'analysis_basis = "full_text" if pdf_text else "abstract"',
         "PyMuPDF",
