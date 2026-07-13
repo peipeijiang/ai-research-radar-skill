@@ -1,6 +1,6 @@
 ---
 name: deploy-ai-research-radar
-description: Deploy, configure, verify, or repair a GitHub-hosted AI research radar for any academic field. Use this skill whenever a user wants automated paper discovery, custom research topics, ArXiv/OpenAlex/DBLP ingestion, LLM scoring and PDF analysis, MinerU parsing, daily or weekly WeCom delivery, Git-backed knowledge, GBrain semantic search, GitHub code matching, citation expansion, or one-click paper feedback, even when they describe only part of that workflow.
+description: Deploy, configure, verify, or repair a GitHub-hosted AI research radar for any academic field. Use this skill whenever a user wants automated paper discovery, custom research topics, ArXiv/OpenAlex/DBLP ingestion, lawful full-text recovery, evidence-labeled LLM analysis, MinerU parsing, daily or weekly WeCom delivery, Git-backed knowledge, GBrain semantic search, GitHub code matching, citation expansion, one-click paper feedback, or single-paper reanalysis, even when they describe only part of that workflow.
 ---
 
 # Deploy AI Research Radar
@@ -47,6 +47,9 @@ credentials in GitHub or Worker secrets; never write them into tracked files.
 
 9. Trigger `daily-run.yml` with `gh workflow run`, watch it to completion, and
    inspect both the WeCom messages and committed `knowledge/` pages.
+   Confirm the overview reports separate full-text and abstract-only counts.
+   Every card without verified full text must show a warning-colored evidence
+   limitation near its title.
 10. Run the deterministic audit:
 
    ```bash
@@ -55,6 +58,17 @@ credentials in GitHub or Worker secrets; never write them into tracked files.
 
 11. Read [references/verification.md](references/verification.md) when a run
     fails, content is shallow, PDF access is missing, or feedback is not saved.
+12. When a lawful public PDF is found after abstract fallback, reanalyze only
+    that paper instead of rerunning discovery:
+
+   ```bash
+   bash scripts/reanalyze_paper.sh \
+     --repo OWNER/REPO \
+     --paper-id 'STORED_PAPER_ID' \
+     --pdf-url 'https://public.example/paper.pdf' \
+     --provider author_repository \
+     --watch
+   ```
 
 ## Deployment Decisions
 
@@ -65,10 +79,17 @@ credentials in GitHub or Worker secrets; never write them into tracked files.
 - Treat ArXiv, OpenAlex, and DBLP as discovery sources with different roles;
   deduplicate by normalized title before analysis.
 - Resolve full text through lawful open-access sources: ArXiv, OpenAlex
-  repositories, Unpaywall, CORE, then author or institutional pages.
+  repositories, Unpaywall, OpenReview, CORE, then title-matched author or
+  institutional pages and official GitHub repositories.
+- Do not treat the presence of a publisher PDF URL as proof that it can be
+  downloaded or parsed. Continue the open-access chain after access failure.
 - Use MinerU when configured and PyMuPDF as the local fallback.
 - Keep one paper per WeCom message. Split oversized sections without ellipses or
   data loss.
+- Mark every non-full-text card prominently and distinguish paper limitations
+  from limitations caused by missing evidence.
+- Validate both HTTP status and platform response codes for webhook delivery;
+  never report a failed notification as complete.
 - Keep GitHub Issue feedback as the fallback when the Worker is unavailable.
 - Keep GBrain optional and local. Sync only after GitHub knowledge has been
   committed; respect PGLite's single-writer constraint.
@@ -82,8 +103,14 @@ Do not declare success until all requested items pass:
 - The research context, keywords, OpenAlex terms, and ArXiv categories match
   the user's stated field rather than the template defaults.
 - Missing-PDF resolution includes ArXiv title/DOI lookup and the lawful
-  OpenAlex/Unpaywall/CORE repository chain before abstract fallback.
+  OpenAlex/Unpaywall/OpenReview/CORE/author-GitHub chain before abstract fallback.
 - WeCom receives an overview and individual paper cards.
+- The overview counts full-text versus abstract-only cards, and every
+  abstract-only card contains a warning that results and limitations may be
+  incomplete.
 - Deep-report and original-paper links open correctly.
+- `reanalyze-paper.yml` can replace one abstract analysis with verified
+  full-text analysis without fetching a new daily batch.
+- Webhook application errors and per-card failures are visible in Action logs.
 - Feedback either records in one click or opens the safe Issue fallback.
 - No secret appears in Git history, logs, reports, or the final response.

@@ -30,11 +30,28 @@ FEATURE_MARKERS = {
     "src/enrichers/open_access.py": (
         "from_openalex_locations",
         "from_unpaywall",
+        "from_openreview",
         "from_core",
+    ),
+    "src/enrichers/github_code.py": (
+        "find_paper_pdf",
+        "github_author_repository",
     ),
     "src/agents/analysis_agent.py": (
         'analysis_basis = "full_text" if pdf_text else "abstract"',
         "PyMuPDF",
+    ),
+    "src/notifications/notifier.py": (
+        "未获取论文正文",
+        'response_data.get("errcode"',
+        "return delivery_succeeded",
+    ),
+    "scripts/reanalyze_paper.py": (
+        "fallback_to_abstract=False",
+        'analysis.get("_analysis_basis") != "full_text"',
+    ),
+    ".github/workflows/reanalyze-paper.yml": (
+        "name: Reanalyze One Paper",
     ),
 }
 
@@ -52,7 +69,11 @@ def main() -> int:
 
     failures = []
     workflows = output("gh", "workflow", "list", "--repo", args.repo)
-    for name in ("ArXiv Daily Research", "Weekly Research Synthesis"):
+    for name in (
+        "ArXiv Daily Research",
+        "Weekly Research Synthesis",
+        "Reanalyze One Paper",
+    ):
         ok = name in workflows
         print(f"[{'OK' if ok else 'FAIL'}] workflow: {name}")
         if not ok:
@@ -75,7 +96,7 @@ def main() -> int:
             )
         except (subprocess.CalledProcessError, KeyError, ValueError, UnicodeDecodeError, json.JSONDecodeError):
             missing_features.append(path)
-    print(f"[{'OK' if not missing_features else 'FAIL'}] missing-PDF resolution chain")
+    print(f"[{'OK' if not missing_features else 'FAIL'}] evidence and delivery contract")
     if missing_features:
         failures.append("missing full-text features: " + ", ".join(missing_features))
 

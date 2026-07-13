@@ -35,7 +35,7 @@ flowchart LR
     C[DBLP]
   end
   Sources --> D[Deduplicate and score]
-  D --> E[Resolve open PDF]
+  D --> E[Resolve and verify open PDF]
   E --> F[Deep LLM analysis]
   F --> G[Git knowledge]
   F --> H[WeCom cards]
@@ -57,14 +57,16 @@ flowchart LR
 | --- | --- |
 | Discovery | User-defined topics across ArXiv, OpenAlex, optional DBLP venues |
 | Understanding | LLM scoring, Chinese summaries, MinerU/PyMuPDF full-text analysis |
-| Evidence | Open-access resolution, citation graph, official GitHub code verification |
-| Delivery | Daily overview, one complete WeCom card per paper, weekly synthesis |
+| Evidence | ArXiv/OpenAlex/Unpaywall/OpenReview/CORE/author-GitHub resolution, citation graph |
+| Delivery | Full-text/abstract counts, evidence warnings, one WeCom card per paper, weekly synthesis |
 | Memory | Deduplicated Git knowledge and optional MiniMax-backed GBrain search |
 | Feedback | Signed one-click Like/Ignore links with GitHub Issue audit trail |
 
-For papers without a PDF, the deployed pipeline tries an ArXiv DOI/title match,
-OpenAlex repository locations, Unpaywall, CORE, and public repository landing
-pages before falling back to explicitly labeled abstract-only analysis.
+For papers without a verified, parseable PDF, the deployed pipeline tries an
+ArXiv DOI/title match, OpenAlex repository locations, Unpaywall, OpenReview,
+CORE, public repository pages, and title-matched author GitHub PDFs. A publisher
+URL that fails to download does not stop recovery. Abstract fallback is visibly
+marked in both the overview and each affected card.
 
 ## Quick Start
 
@@ -112,6 +114,17 @@ gh workflow run daily-run.yml \
 python "$SKILL/scripts/verify_deployment.py" \
   --repo YOUR_GITHUB_NAME/my-research-radar \
   --require-custom-topics
+```
+
+When a public PDF is found after an abstract-only run, update just that paper:
+
+```bash
+bash "$SKILL/scripts/reanalyze_paper.sh" \
+  --repo YOUR_GITHUB_NAME/my-research-radar \
+  --paper-id 'STORED_PAPER_ID' \
+  --pdf-url 'https://public.example/paper.pdf' \
+  --provider author_repository \
+  --watch
 ```
 
 ## Configuration
@@ -195,10 +208,13 @@ cp -R ai-research-radar-skill/skills/deploy-ai-research-radar ~/.agents/skills/
 
 - 每天自动发现、去重和筛选论文
 - 优先寻找合法开放 PDF，并执行全文深度分析
+- 出版商 PDF 下载失败后继续查找 OpenReview、CORE 与作者 GitHub 公开版本
+- 日报概览分别统计全文深读与仅摘要分析，摘要卡片显示醒目证据警告
 - 每篇论文一张完整企业微信卡片，不截断核心内容
 - 自动生成适合手机阅读的 Markdown 深度报告
 - 每周生成带证据区分的研究综述
 - 喜欢/忽略反馈进入下一轮评分
+- 找到迟到的公开全文后，可单独重分析一篇而无需重跑整批日报
 - 可选同步到本地 GBrain，使用 `minimax:embo-01` 等模型检索
 
 ### 密钥原则

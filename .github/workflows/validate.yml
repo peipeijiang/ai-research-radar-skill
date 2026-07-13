@@ -16,6 +16,7 @@ jobs:
         run: |
           bash -n skills/deploy-ai-research-radar/scripts/bootstrap_repository.sh
           bash -n skills/deploy-ai-research-radar/scripts/deploy_feedback_worker.sh
+          bash -n skills/deploy-ai-research-radar/scripts/reanalyze_paper.sh
           python -m py_compile \
             skills/deploy-ai-research-radar/scripts/configure_topics.py \
             skills/deploy-ai-research-radar/scripts/configure_repo.py \
@@ -30,5 +31,8 @@ jobs:
           assert '\ndescription:' in text.split('---', 2)[1]
           assert 'TODO' not in text
           assert len(text.splitlines()) < 500
+          assert 'OpenReview' in text
+          assert 'abstract-only card' in text
+          assert 'reanalyze_paper.sh' in text
           print('Skill metadata and size are valid')
           PY

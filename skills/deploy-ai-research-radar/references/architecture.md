@@ -9,11 +9,14 @@ flowchart LR
   C[DBLP venues] --> D
   D --> E[Semantic Scholar enrichment]
   E --> F[LLM relevance scoring]
-  F --> G[Open-access resolver]
+  F --> G[Open-access and author-copy resolver]
   G --> H[MinerU or PyMuPDF]
   H --> I[Deep paper analysis]
+  H --> O[Explicit abstract-only fallback]
   I --> J[Git-backed knowledge]
   I --> K[WeCom cards]
+  O --> J
+  O --> K
   J --> L[Weekly synthesis]
   J --> M[Local GBrain]
   K --> N[Like or ignore feedback]
@@ -29,11 +32,14 @@ flowchart LR
 | DBLP | Optional venue-focused discovery when the user's field has configured DBLP venues |
 | Semantic Scholar | Abstract/TLDR backfill and citation metadata |
 | GitHub matching | Verify official or author-linked implementation repositories |
+| OpenReview | Exact-title public submissions and lawful PDF recovery |
+| Author GitHub PDF | Recover a paper explicitly linked from a title-matched implementation README |
 | MinerU | Structured cloud PDF extraction; optional |
 | PyMuPDF | Local PDF text fallback |
 | Deep LLM | Scoring, translation, deep analysis, weekly synthesis |
 | GitHub Actions | Daily and weekly scheduling, secrets, durable execution |
 | WeCom | Overview plus one complete card per paper |
+| Single-paper reanalysis | Replace an abstract fallback after a verified public PDF is found |
 | Feedback Worker | Signed one-click feedback that creates auditable GitHub Issues |
 | GBrain | Optional local hybrid and semantic search over committed knowledge |
 
@@ -47,3 +53,8 @@ flowchart LR
 
 Treat Git as the durable source of truth. GitHub Actions caches are accelerators,
 not authoritative storage.
+
+Store `_analysis_basis` as `full_text` or `abstract`. Delivery must expose that
+basis: overview counts both classes, and abstract-only cards carry a prominent
+warning. The model may summarize an abstract, but it must not invent datasets,
+metrics, baselines, or paper limitations absent from the available evidence.

@@ -1,4 +1,4 @@
 interface:
   display_name: "Deploy AI Research Radar"
-  short_description: "Deploy a research radar for any academic field"
-  default_prompt: "Use $deploy-ai-research-radar to deploy and verify a daily paper research pipeline for my field."
+  short_description: "Deploy an evidence-aware research radar"
+  default_prompt: "Use $deploy-ai-research-radar to deploy and verify a daily paper pipeline with full-text recovery, evidence labels, and reliable delivery for my field."

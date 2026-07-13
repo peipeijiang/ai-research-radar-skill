@@ -28,6 +28,10 @@ not required for a first run.
 | `FEEDBACK_API_URL` | One-click feedback endpoint |
 | `FEEDBACK_SIGNING_SECRET` | HMAC signatures for feedback URLs |
 
+OpenReview lookup requires no API key. Author-repository PDF discovery uses the
+automatic `${{ github.token }}` already provided to the daily workflow; no
+additional personal token is required for public repositories.
+
 ## Research topics
 
 Run the topic configurator before the first workflow:
@@ -59,3 +63,5 @@ reviewing one week of false positives and missed papers.
 - Rotate any credential pasted into chat, terminal history, or screenshots.
 - Never commit `.env`, `wrangler.toml` with sensitive values, or token files.
 - Keep the HMAC signing secret identical in Worker and GitHub Actions.
+- Treat webhook URLs as secrets. Delivery code must inspect WeCom's JSON
+  `errcode`, because HTTP 200 alone does not prove that a message was accepted.
