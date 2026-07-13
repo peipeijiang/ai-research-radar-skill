@@ -57,6 +57,8 @@ FEATURE_MARKERS = {
     "src/notifications/notifier.py": (
         "未获取论文正文",
         "RESEARCH_FIELD_NAME",
+        "期刊 / 会议 / 系列",
+        "发现渠道",
         'response_data.get("errcode"',
         "return delivery_succeeded",
     ),

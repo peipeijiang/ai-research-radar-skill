@@ -108,6 +108,9 @@ Each deployment keeps its own feedback events and semantic preference profile.
   data loss.
 - Mark every non-full-text card prominently and distinguish paper limitations
   from limitations caused by missing evidence.
+- Give the publication venue its own card row. Distinguish the journal,
+  conference, or working-paper series from the discovery channel such as
+  OpenAlex, ArXiv, DBLP, or RePEc.
 - Validate both HTTP status and platform response codes for webhook delivery;
   never report a failed notification as complete.
 - Keep GitHub Issue feedback as the fallback when the Worker is unavailable.
@@ -135,6 +138,8 @@ Do not declare success until all requested items pass:
 - Missing-PDF resolution includes ArXiv title/DOI lookup and the lawful
   OpenAlex/Unpaywall/OpenReview/CORE/author-GitHub chain before abstract fallback.
 - WeCom or DingTalk receives an overview and individual paper cards.
+- Every paper card shows publication venue, publication type/date, analysis
+  basis, base score, and a separately labeled discovery channel.
 - The overview counts full-text versus abstract-only cards, and every
   abstract-only card contains a warning that results and limitations may be
   incomplete.
