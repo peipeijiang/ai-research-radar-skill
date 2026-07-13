@@ -10,7 +10,7 @@
 | `SMART_LLM_API_KEY` | Deep analysis and synthesis | Provider API key |
 | `SMART_LLM_BASE_URL` | OpenAI-compatible endpoint | Same provider endpoint |
 | `SMART_LLM_MODEL_NAME` | Analysis model | `deepseek-chat` |
-| `WECHAT_WEBHOOK_URL` | WeCom group robot delivery | Robot webhook URL |
+| `WECHAT_WEBHOOK_URL` or `DINGTALK_WEBHOOK_URL` | Group robot delivery | One channel is required |
 
 The configuration script also sets temperatures and enables notifications.
 
@@ -25,12 +25,31 @@ not required for a first run.
 | `CORE_API_KEY` | CORE open-access full-text lookup |
 | `OPENALEX_API_KEY` | Higher OpenAlex limits when available |
 | `SEMANTIC_SCHOLAR_API_KEY` | Higher Semantic Scholar limits |
+| `MINIMAX_API_KEY` | MiniMax `embo-01` semantic preference vectors |
+| `DINGTALK_SECRET` | Signed DingTalk robot requests when enabled |
 | `FEEDBACK_API_URL` | One-click feedback endpoint |
 | `FEEDBACK_SIGNING_SECRET` | HMAC signatures for feedback URLs |
 
 OpenReview lookup requires no API key. Author-repository PDF discovery uses the
 automatic `${{ github.token }}` already provided to the daily workflow; no
 additional personal token is required for public repositories.
+
+## Personalization
+
+Each repository owns an independent preference store:
+
+- `events.jsonl` preserves every LIKE/IGNORE event and removes the former
+  100-Issue synchronization ceiling;
+- `embeddings.jsonl` caches MiniMax `embo-01` vectors so unchanged papers are
+  not embedded again;
+- `profile.json` contains positive and negative centroids plus readable topic
+  terms;
+- `metrics.jsonl` records base/personalized Top N overlap and shadow results.
+
+The default minimum is three usable feedback events. Keep the mode at `shadow`
+for three successful daily runs. Cards expose the personalized score and reason,
+while the actual Top N remains unchanged. After review, set the mode to `live`
+to activate preference adjustment, diversity reranking, and exploration.
 
 ## Research topics
 

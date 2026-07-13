@@ -18,7 +18,6 @@ REQUIRED_SECRETS = {
     "SMART_LLM_API_KEY",
     "SMART_LLM_BASE_URL",
     "SMART_LLM_MODEL_NAME",
-    "WECHAT_WEBHOOK_URL",
 }
 
 FEATURE_MARKERS = {
@@ -68,6 +67,21 @@ FEATURE_MARKERS = {
     ".github/workflows/reanalyze-paper.yml": (
         "name: Reanalyze One Paper",
     ),
+    "src/personalization/engine.py": (
+        "class PersonalizationEngine",
+        "class MiniMaxEmbeddingCache",
+        "diversity_lambda",
+        "exploration_ratio",
+    ),
+    "scripts/sync_feedback.py": (
+        "parse_events",
+        'range(1, 101)',
+        "events.jsonl",
+    ),
+    ".github/workflows/daily-run.yml": (
+        "MINIMAX_API_KEY",
+        "EMBEDDING_MODEL=embo-01",
+    ),
 }
 
 
@@ -100,6 +114,12 @@ def main() -> int:
     print(f"[{'OK' if not missing else 'FAIL'}] required secret names")
     if missing:
         failures.append("missing secrets: " + ", ".join(missing))
+    notification_ready = bool({"WECHAT_WEBHOOK_URL", "DINGTALK_WEBHOOK_URL"} & names)
+    print(f"[{'OK' if notification_ready else 'FAIL'}] notification webhook secret")
+    if not notification_ready:
+        failures.append("missing WECHAT_WEBHOOK_URL or DINGTALK_WEBHOOK_URL")
+    embedding_ready = "MINIMAX_API_KEY" in names
+    print(f"[{'OK' if embedding_ready else 'WARN'}] MiniMax embo-01 personalization secret")
 
     missing_features = []
     for path, markers in FEATURE_MARKERS.items():

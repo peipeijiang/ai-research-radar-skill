@@ -19,11 +19,14 @@ PROMPTS = (
     ("SMART_LLM_BASE_URL", "Deep-analysis base URL", True, False, "https://api.deepseek.com"),
     ("SMART_LLM_MODEL_NAME", "Deep-analysis model", True, False, "deepseek-chat"),
     ("OPENALEX_EMAIL", "OpenAlex contact email (recommended)", False, False, ""),
-    ("WECHAT_WEBHOOK_URL", "WeCom robot webhook", True, True, ""),
+    ("WECHAT_WEBHOOK_URL", "WeCom robot webhook (optional when using DingTalk)", False, True, ""),
+    ("DINGTALK_WEBHOOK_URL", "DingTalk robot webhook (optional when using WeCom)", False, True, ""),
+    ("DINGTALK_SECRET", "DingTalk robot signing secret (optional)", False, True, ""),
     ("MINERU_API_KEY", "MinerU API token (optional)", False, True, ""),
     ("CORE_API_KEY", "CORE API key (optional)", False, True, ""),
     ("OPENALEX_API_KEY", "OpenAlex API key (optional)", False, True, ""),
     ("SEMANTIC_SCHOLAR_API_KEY", "Semantic Scholar API key (optional)", False, True, ""),
+    ("MINIMAX_API_KEY", "MiniMax API key for embo-01 personalization (recommended)", False, True, ""),
 )
 
 
@@ -72,6 +75,8 @@ def main() -> int:
         }
     )
     missing = [name for name, _, required, _, _ in PROMPTS if required and not values[name]]
+    if not values["WECHAT_WEBHOOK_URL"] and not values["DINGTALK_WEBHOOK_URL"]:
+        missing.append("WECHAT_WEBHOOK_URL or DINGTALK_WEBHOOK_URL")
     if missing:
         raise SystemExit("Missing required values: " + ", ".join(missing))
 

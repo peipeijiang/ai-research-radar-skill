@@ -20,7 +20,11 @@ flowchart LR
   J --> L[Weekly synthesis]
   J --> M[Local GBrain]
   K --> N[Like or ignore feedback]
-  N --> F
+  N --> P[Complete feedback event log]
+  P --> Q[Positive and negative embo-01 profile]
+  Q --> R[Personalized score, diversity, exploration]
+  F --> R
+  R --> K
 ```
 
 ## Component roles
@@ -45,6 +49,7 @@ flowchart LR
 | WeCom | Overview plus one complete card per paper |
 | Single-paper reanalysis | Replace an abstract fallback after a verified public PDF is found |
 | Feedback Worker | Signed one-click feedback that creates auditable GitHub Issues |
+| Personalization engine | Time-decayed positive/negative semantic profile, lexical fallback, diversity reranking, exploration, and recommendation reasons |
 | GBrain | Optional local hybrid and semantic search over committed knowledge |
 
 ## Durable state
@@ -53,6 +58,10 @@ flowchart LR
 - `knowledge/papers/`: mobile-friendly Markdown research reports.
 - `knowledge/graph.json`: citation and related-work edges.
 - `knowledge/feedback.json`: synchronized preferences.
+- `knowledge/preferences/events.jsonl`: complete auditable LIKE/IGNORE history.
+- `knowledge/preferences/embeddings.jsonl`: cached `embo-01` vectors.
+- `knowledge/preferences/profile.json`: deployment-specific preference profile.
+- `knowledge/preferences/metrics.jsonl`: shadow/live ranking diagnostics.
 - `knowledge/reports/weekly/`: weekly evidence-aware synthesis.
 
 Treat Git as the durable source of truth. GitHub Actions caches are accelerators,

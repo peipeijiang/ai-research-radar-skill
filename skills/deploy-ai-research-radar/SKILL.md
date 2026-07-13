@@ -7,6 +7,7 @@ description: Deploy, configure, verify, or repair a GitHub-hosted AI research ra
 
 Build from the maintained template at `peipeijiang/arxiv-daily-researcher`. Keep
 credentials in GitHub or Worker secrets; never write them into tracked files.
+Each deployment keeps its own feedback events and semantic preference profile.
 
 ## Workflow
 
@@ -46,6 +47,9 @@ credentials in GitHub or Worker secrets; never write them into tracked files.
    ```
 
    For automation, export the same secret names and add `--non-interactive`.
+   Configure `MINIMAX_API_KEY` to enable `embo-01` semantic preference learning;
+   without it, personalization uses lexical signals only. Choose either WeCom or
+   DingTalk for delivery.
 8. Optionally deploy one-click feedback after the user provides a fine-grained
    GitHub token limited to the deployment repository with Issues read/write:
 
@@ -59,6 +63,9 @@ credentials in GitHub or Worker secrets; never write them into tracked files.
    Confirm the overview reports separate full-text and abstract-only counts.
    Every card without verified full text must show a warning-colored evidence
    limitation near its title.
+   Personalization starts after three usable feedback events. Keep
+   `personalization.mode` set to `shadow` for the first three successful daily
+   runs, compare base and personalized scores, then switch to `live`.
 10. Run the deterministic audit:
 
    ```bash
@@ -104,6 +111,14 @@ credentials in GitHub or Worker secrets; never write them into tracked files.
 - Validate both HTTP status and platform response codes for webhook delivery;
   never report a failed notification as complete.
 - Keep GitHub Issue feedback as the fallback when the Worker is unavailable.
+- Synchronize the complete feedback history with pagination. Store immutable
+  events in `knowledge/preferences/events.jsonl`; do not collapse learning to
+  the latest 100 Issues.
+- Use independent positive and negative `embo-01` centroids per deployment.
+  Never share a preference profile between unrelated research fields.
+- Combine base relevance, semantic preference, negative feedback, diversity
+  reranking, and one exploration slot. Preserve the base Top N during shadow
+  mode and show the personalized score and reason on each card.
 - Keep GBrain optional and local. Sync only after GitHub knowledge has been
   committed; respect PGLite's single-writer constraint.
 
@@ -119,7 +134,7 @@ Do not declare success until all requested items pass:
   the configured research field name.
 - Missing-PDF resolution includes ArXiv title/DOI lookup and the lawful
   OpenAlex/Unpaywall/OpenReview/CORE/author-GitHub chain before abstract fallback.
-- WeCom receives an overview and individual paper cards.
+- WeCom or DingTalk receives an overview and individual paper cards.
 - The overview counts full-text versus abstract-only cards, and every
   abstract-only card contains a warning that results and limitations may be
   incomplete.
@@ -128,4 +143,6 @@ Do not declare success until all requested items pass:
   full-text analysis without fetching a new daily batch.
 - Webhook application errors and per-card failures are visible in Action logs.
 - Feedback either records in one click or opens the safe Issue fallback.
+- Feedback events are complete, the preference profile reports cold-start or
+  active state, and weekly output contains personalization learning metrics.
 - No secret appears in Git history, logs, reports, or the final response.
